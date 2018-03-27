@@ -1,7 +1,6 @@
 # Личный проект «Пиксель хантер» [![Build status][travis-image]][travis-url]
 
 * Студент: [Елена Есина](https://up.htmlacademy.ru/ecmascript/4/user/261907).
-* Наставник: `Неизвестно`.
 
 ---
 
