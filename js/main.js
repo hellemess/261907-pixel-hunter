@@ -423,8 +423,8 @@ window.script = (() => {
     </footer>`
   ];
 
-  const container = document.querySelector('main');
-  const template = document.createElement('template');
+  const container = document.querySelector(`main`);
+  const template = document.createElement(`template`);
 
   const render = (i) => {
     template.innerHTML = screens[i];
@@ -436,7 +436,7 @@ window.script = (() => {
 
   render(i);
 
-  document.addEventListener('keydown', (evt) => {
+  document.addEventListener(`keydown`, (evt) => {
     if (isSwitchEvent(evt)) {
       if (evt.keyCode === ARROW_LEFT && i > 0) {
         i--;
