@@ -1,3 +1,3 @@
-import {showIntro} from './intro';
+import showIntro from './intro';
 
 showIntro();

@@ -1,6 +1,6 @@
 import {getElement, render} from './utils';
-import {showGame3} from './game-3';
-import {showGreeting} from './greeting';
+import showGame3 from './game-3';
+import showGreeting from './greeting';
 
 const game2Template = `<header class="header">
   <div class="header__back">
@@ -61,12 +61,10 @@ const game2Template = `<header class="header">
   </div>
 </footer>`;
 
-export const showGame2 = () => {
-  const game2 = getElement(game2Template);
-
-  const content = game2.querySelector(`.game__content`);
+export default () => {
+  const game2Element = getElement(game2Template);
+  const content = game2Element.querySelector(`.game__content`);
 
   content.addEventListener(`input`, showGame3);
-
-  render(game2, showGreeting);
+  render(game2Element, showGreeting);
 };

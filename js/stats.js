@@ -1,5 +1,5 @@
 import {getElement, render} from './utils';
-import {showGreeting} from './greeting';
+import showGreeting from './greeting';
 
 const statsTemplate = `<header class="header">
   <div class="header__back">
@@ -136,8 +136,8 @@ const statsTemplate = `<header class="header">
   </div>
 </footer>`;
 
-export const showStats = () => {
-  const stats = getElement(statsTemplate);
+export default () => {
+  const statsElement = getElement(statsTemplate);
 
-  render(stats, showGreeting);
+  render(statsElement, showGreeting);
 };

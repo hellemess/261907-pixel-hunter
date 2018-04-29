@@ -1,6 +1,6 @@
 import {getElement, render} from './utils';
-import {showStats} from './stats';
-import {showGreeting} from './greeting';
+import showStats from './stats';
+import showGreeting from './greeting';
 
 const game3Template = `<header class="header">
   <div class="header__back">
@@ -59,10 +59,9 @@ const game3Template = `<header class="header">
   </div>
 </footer>`;
 
-export const showGame3 = () => {
-  const game3 = getElement(game3Template);
-
-  const content = game3.querySelector(`.game__content`);
+export default () => {
+  const game3Element = getElement(game3Template);
+  const content = game3Element.querySelector(`.game__content`);
 
   content.addEventListener(`click`, (evt) => {
     if (evt.target.classList.contains(`game__option`)) {
@@ -70,5 +69,5 @@ export const showGame3 = () => {
     }
   });
 
-  render(game3, showGreeting);
+  render(game3Element, showGreeting);
 };
