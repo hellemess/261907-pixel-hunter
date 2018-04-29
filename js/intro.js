@@ -1,5 +1,5 @@
 import {getElement, render} from './utils';
-import {showGreeting} from './greeting';
+import showGreeting from './greeting';
 
 const introTemplate = `<div id="main" class="central__content">
   <div id="intro" class="intro">
@@ -25,12 +25,10 @@ const introTemplate = `<div id="main" class="central__content">
   </div>
 </footer>`;
 
-export const showIntro = () => {
-  const intro = getElement(introTemplate);
-
-  const asterisk = intro.querySelector(`.intro__asterisk`);
+export default () => {
+  const introElement = getElement(introTemplate);
+  const asterisk = introElement.querySelector(`.intro__asterisk`);
 
   asterisk.addEventListener(`click`, showGreeting);
-
-  render(intro);
+  render(introElement);
 };

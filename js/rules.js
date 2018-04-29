@@ -1,6 +1,6 @@
 import {getElement, render} from './utils';
-import {showGame1} from './game-1';
-import {showGreeting} from './greeting';
+import showGame1 from './game-1';
+import showGreeting from './greeting';
 
 const rulesTemplate = `<header class="header">
   <div class="header__back">
@@ -44,10 +44,9 @@ const rulesTemplate = `<header class="header">
   </div>
 </footer>`;
 
-export const showRules = () => {
-  const rules = getElement(rulesTemplate);
-
-  const form = rules.querySelector(`.rules__form`);
+export default () => {
+  const rulesElement = getElement(rulesTemplate);
+  const form = rulesElement.querySelector(`.rules__form`);
   const input = form.querySelector(`.rules__input`);
   const button = form.querySelector(`.rules__button`);
 
@@ -60,5 +59,5 @@ export const showRules = () => {
     showGame1();
   });
 
-  render(rules, showGreeting);
+  render(rulesElement, showGreeting);
 };

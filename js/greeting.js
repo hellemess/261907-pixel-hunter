@@ -1,5 +1,5 @@
 import {getElement, render} from './utils';
-import {showRules} from './rules';
+import showRules from './rules';
 
 const greetingTemplate = `<div class="greeting central--blur">
   <div class="greeting__logo">
@@ -37,12 +37,10 @@ const greetingTemplate = `<div class="greeting central--blur">
   </div>
 </footer>`;
 
-export const showGreeting = () => {
-  const greeting = getElement(greetingTemplate);
-
-  const arrow = greeting.querySelector(`.greeting__continue`);
+export default () => {
+  const greetingElement = getElement(greetingTemplate);
+  const arrow = greetingElement.querySelector(`.greeting__continue`);
 
   arrow.addEventListener(`click`, showRules);
-
-  render(greeting);
+  render(greetingElement);
 };
