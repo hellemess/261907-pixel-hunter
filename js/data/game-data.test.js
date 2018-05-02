@@ -1,11 +1,11 @@
 import {assert} from 'chai';
-import {countPoints, setTimer} from './game-data';
+import {convertAnswer, countPoints, setTimer} from './game-data';
 
 describe(`Points Counter`, () => {
   it(`should recognize failures`, () => {
-    assert.equal(-1, countPoints(Array(0)));
-    assert.equal(-1, countPoints(Array(5)));
-    assert.equal(-1, countPoints(Array(9)));
+    assert.equal(`fail`, countPoints(Array(0)).points);
+    assert.equal(`fail`, countPoints(Array(5)).points);
+    assert.equal(`fail`, countPoints(Array(9)).points);
   });
 
   it(`should count points correctly`, () => {
@@ -40,49 +40,50 @@ describe(`Points Counter`, () => {
       {
         value: true
       }
-    ]));
+    ]).points);
     assert.equal(850, countPoints([
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
+
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: false,
-        time: 15
+        time: 15,
+        value: false
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: false,
-        time: 15
+        time: 15,
+        value: false
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       }
-    ]));
+    ]).points);
   });
 
   it(`should count lost lives correctly`, () => {
@@ -117,7 +118,7 @@ describe(`Points Counter`, () => {
       {
         value: true
       }
-    ]));
+    ]).points);
     assert.equal(850, countPoints([
       {
         value: false
@@ -149,265 +150,293 @@ describe(`Points Counter`, () => {
       {
         value: true
       }
-    ]));
+    ]).points);
   });
 
   it(`should recognize fast answers`, () => {
     assert.equal(1200, countPoints([
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       }
-    ]));
+    ]).points);
     assert.equal(1400, countPoints([
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       }
-    ]));
+    ]).points);
     assert.equal(1650, countPoints([
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       },
       {
-        value: true,
-        time: 5
+        time: 5,
+        value: true
       }
-    ]));
+    ]).points);
   });
 
   it(`should recognize slow answers`, () => {
     assert.equal(1100, countPoints([
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       }
-    ]));
+    ]).points);
     assert.equal(900, countPoints([
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 15
+        time: 15,
+        value: true
       }
-    ]));
+    ]).points);
     assert.equal(650, countPoints([
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       },
       {
-        value: true,
-        time: 25
+        time: 25,
+        value: true
       }
-    ]));
+    ]).points);
+  });
+});
+
+describe(`Answer Converter`, () => {
+  it(`should recognize wrong answers`, () => {
+    assert.equal(`wrong`, convertAnswer({
+      value: false
+    }));
+  });
+
+  it(`should recognize correct answers`, () => {
+    assert.equal(`correct`, convertAnswer({
+      value: true
+    }));
+  });
+
+  it(`should recognize fast answers`, () => {
+    assert.equal(`fast`, convertAnswer({
+      time: 5,
+      value: true
+    }));
+  });
+
+  it(`should recognize slow answers`, () => {
+    assert.equal(`slow`, convertAnswer({
+      time: 25,
+      value: true
+    }));
   });
 });
 
