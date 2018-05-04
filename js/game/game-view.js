@@ -1,6 +1,7 @@
 import {assignAdditionalClass} from '../data/data';
 import AbstractView from '../view';
 import FooterView from '../elements/footer-view';
+import {displayImagesCorrectly} from './resize';
 
 const renderContent = (content) => `
   ${content.answers.map((it, i) => `
@@ -39,6 +40,8 @@ export default class GameView extends AbstractView {
 
   bind() {
     const content = this.element.querySelector(`.game__content`);
+
+    displayImagesCorrectly(content, this.level.answers[0].image.width, this.level.answers[0].image.height);
 
     let answer;
 

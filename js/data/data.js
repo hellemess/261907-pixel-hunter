@@ -230,7 +230,7 @@ const INITIAL_DATA = [
 ];
 
 const INITIAL_STATE = Object.freeze({
-  answers: [],
+  answers: Object.freeze([]),
   level: 0,
   lives: 3,
   time: 0
