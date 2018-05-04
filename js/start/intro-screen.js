@@ -1,5 +1,6 @@
 import AbstractView from '../view';
 import FooterView from '../elements/footer-view';
+import Application from '../app';
 
 export default class IntroScreen extends AbstractView {
   constructor() {
@@ -25,6 +26,7 @@ export default class IntroScreen extends AbstractView {
 
     asteriks.addEventListener(`click`, (evt) => {
       evt.preventDefault();
+      Application.showGreeting();
     });
   }
 }

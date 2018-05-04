@@ -12,7 +12,6 @@ export default class HeaderView extends AbstractView {
 
   get template() {
     return `
-      <h1 class="game__timer">00:30</h1>
       <div class="game__lives">
         ${renderLives(this.state.lives)}
       </div>`;
