@@ -1,18 +1,6 @@
+import {assignAdditionalClass} from '../data/data';
 import AbstractView from '../view';
-import HeaderView from '../elements/header-view';
-import StatsView from '../elements/stats-view';
 import FooterView from '../elements/footer-view';
-
-const assignAdditionalClass = (level) => {
-  switch (level.type) {
-    case `tinder-like`:
-      level.class = `game__content--wide`;
-      break;
-    case `one-of-three`:
-      level.class = `game__content--triple`;
-      break;
-  }
-};
 
 const renderContent = (content) => `
   ${content.answers.map((it, i) => `
@@ -30,9 +18,8 @@ const renderContent = (content) => `
     </div>`).join(``)}`;
 
 export default class GameView extends AbstractView {
-  constructor(state, level) {
+  constructor(level) {
     super();
-    this.state = state;
     this.level = level;
 
     assignAdditionalClass(this.level);
@@ -40,15 +27,12 @@ export default class GameView extends AbstractView {
 
   get template() {
     return `
-      <header class="header">
-        ${new HeaderView(this.state).template}
-      </header>
+      <header class="header"></header>
       <div class="game">
         <p class="game__task">${this.level.question}</p>
         <form class="game__content ${typeof this.level.class === `string` ? this.level.class : ``}">
           ${renderContent(this.level)}
         </form>
-        ${new StatsView(this.state).template}
       </div>
       ${new FooterView().template}`;
   }

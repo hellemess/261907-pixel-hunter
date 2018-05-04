@@ -1,5 +1,6 @@
 import AbstractView from '../view';
 import FooterView from '../elements/footer-view';
+import Application from '../app';
 
 export default class GreetingScreen extends AbstractView {
   constructor() {
@@ -37,6 +38,7 @@ export default class GreetingScreen extends AbstractView {
 
     arrow.addEventListener(`click`, (evt) => {
       evt.preventDefault();
+      Application.showRules();
     });
   }
 }

@@ -1,5 +1,6 @@
 import ResultView from './result-view';
 import BackView from '../elements/back-view';
+import Application from '../app';
 
 export default class ResultScreen {
   constructor(state) {
@@ -8,12 +9,15 @@ export default class ResultScreen {
     this.header = this.view.element.querySelector(`header`);
     this.back = new BackView();
 
-    this.back.onClick = () => {};
-
+    this.back.onClick = this.goBack.bind(this);
     this.header.appendChild(this.back.element);
   }
 
   get element() {
     return this.view.element;
+  }
+
+  goBack() {
+    Application.showGreeting();
   }
 }

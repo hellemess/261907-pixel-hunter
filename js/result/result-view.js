@@ -1,43 +1,7 @@
 import AbstractView from '../view';
+import {countPoints} from '../data/data';
 import StatsView from '../elements/stats-view';
 import FooterView from '../elements/footer-view';
-
-const countPoints = (answers) => {
-  const result = {
-    answers: {
-      correct: 0,
-      fast: 0,
-      slow: 0
-    },
-    lives: 3,
-    points: `fail`
-  };
-
-  if (answers.length === 10) {
-    result.points = 0;
-
-    answers.forEach((it) => {
-      if (it.value) {
-        result.answers.correct += 1;
-        result.points += 100;
-
-        if (it.time < 10) {
-          result.answers.fast += 1;
-          result.points += 50;
-        } else if (it.time > 20) {
-          result.answers.slow += 1;
-          result.points -= 50;
-        }
-      } else {
-        result.lives -= 1;
-      }
-    });
-
-    result.points += result.lives * 50;
-  }
-
-  return result;
-};
 
 export default class ResultView extends AbstractView {
   constructor(state) {

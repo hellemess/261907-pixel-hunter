@@ -1,88 +1,113 @@
+import {getRightAnswer} from '../data/data';
+import Application from '../app';
 import GameView from './game-view';
 import BackView from '../elements/back-view';
-
-const getRightAnswer = (level) => {
-  let rightAnswer;
-
-  switch (level.type) {
-    case `tinder-like`:
-      rightAnswer = level.answers[0].type;
-      break;
-    case `two-of-two`:
-      rightAnswer = [];
-
-      level.answers.forEach((it) => {
-        rightAnswer.push(it.type);
-      });
-
-      break;
-    case `one-of-three`:
-      let paintings = 0;
-      let photos = 0;
-
-      level.answers.forEach((it) => {
-        if (it.type === `painting`) {
-          paintings++;
-        } else {
-          photos++;
-        }
-      });
-
-      rightAnswer = paintings < photos ? `painting` : `photo`;
-  }
-
-  return rightAnswer;
-};
+import TimerView from '../elements/timer-view';
+import HeaderView from '../elements/header-view';
+import StatsView from '../elements/stats-view';
 
 export default class GameScreen {
-  constructor(state, data) {
-    this.state = state;
-    this.level = data[this.state.lives];
-    this.view = new GameView(this.state, this.level);
-    this.header = this.view.element.querySelector(`header`);
-    this.back = new BackView();
+  constructor(model) {
+    this.model = model;
+    this.container = document.createElement(`div`);
 
-    this.back.onClick = () => {};
-
-    this.view.onAnswer = (answer) => {
-      const rightAnswer = getRightAnswer(this.level);
-
-      let result;
-
-      switch (this.level.type) {
-        case `tinder-like`:
-        case `one-of-three`:
-          result = answer === rightAnswer;
-          break;
-        case `two-of-two`:
-          result = JSON.stringify(answer) === JSON.stringify(rightAnswer);
-      }
-
-      this.state.answers.push({
-        time: 15,
-        value: result
-      });
-
-      if (!result) {
-        this.state.lives -= 1;
-      }
-
-      if (this.state.lives > 0 && this.state.answers.length < 10) {
-        this.state.level += 1;
-        this.continue();
-      } else {
-        this.finish();
-      }
-    };
-
-    this.header.insertBefore(this.back.element, this.header.firstChild);
+    this._interval = null;
+    this._timeout = null;
   }
 
   get element() {
-    return this.view.element;
+    return this.container;
   }
 
-  finish() {}
+  init() {
+    this.updateLevel();
+  }
 
-  continue() {}
+  answer(answer) {
+    clearInterval(this._interval);
+    clearTimeout(this._timeout);
+
+    const rightAnswer = getRightAnswer(this.model.level);
+
+    let result;
+
+    switch (this.model.level.type) {
+      case `tinder-like`:
+      case `one-of-three`:
+        result = answer === rightAnswer;
+        break;
+      case `two-of-two`:
+        result = JSON.stringify(answer) === JSON.stringify(rightAnswer);
+    }
+
+    this.model.saveAnswer(result);
+
+    if (!result) {
+      this.model.die();
+    }
+
+    this.continue();
+  }
+
+  continue() {
+    if (this.model.canContinue()) {
+      this.model.updateLevel();
+      this.updateLevel();
+    } else {
+      Application.showResult(this.model.state);
+    }
+  }
+
+  goBack() {
+    Application.showGreeting();
+  }
+
+  launchTimer() {
+    this.model.launchTimer();
+
+    this._interval = setInterval(() => {
+      this.model.tick();
+      this.updateTimer();
+    }, 1000);
+
+    this._timeout = setTimeout(() => {
+      clearInterval(this._interval);
+      this.model.saveAnswer(false);
+      this.model.die();
+      this.continue();
+    }, 30000);
+  }
+
+  updateLevel() {
+    this.launchTimer();
+
+    this.view = new GameView(this.model.level);
+    this.back = new BackView();
+    this.timer = new TimerView(this.model.state);
+    this.header = new HeaderView(this.model.state);
+    this.stats = new StatsView(this.model.state);
+    this.container.innerHTML = ``;
+
+    this.back.onClick = this.goBack.bind(this);
+    this.view.onAnswer = this.answer.bind(this);
+
+    this.inner = {
+      header: this.view.element.querySelector(`header`),
+      game: this.view.element.querySelector(`.game`)
+    };
+
+    this.container.appendChild(this.view.element);
+    this.inner.header.appendChild(this.back.element);
+    this.inner.header.appendChild(this.timer.element);
+    this.inner.header.appendChild(this.header.element);
+    this.inner.game.appendChild(this.stats.element);
+  }
+
+  updateTimer() {
+    const newTimer = new TimerView(this.model.state);
+
+    this.inner.header.replaceChild(newTimer.element, document.querySelector(`.game__timer`));
+
+    this.timer = newTimer;
+  }
 }

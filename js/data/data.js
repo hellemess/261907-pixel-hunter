@@ -229,32 +229,155 @@ const INITIAL_DATA = [
   }
 ];
 
-const INITIAL_STATE = {
+const INITIAL_STATE = Object.freeze({
   answers: [],
   level: 0,
-  lives: 3
+  lives: 3,
+  time: 0
+});
+
+const TIME_FOR_TASK = 30;
+
+const assignAdditionalClass = (level) => {
+  switch (level.type) {
+    case `tinder-like`:
+      level.class = `game__content--wide`;
+      break;
+    case `one-of-three`:
+      level.class = `game__content--triple`;
+      break;
+  }
 };
 
-const setTimer = (time) => {
-  if (typeof time !== `number`) {
-    throw new Error(`Function only accepts numbers`);
-  }
+const canContinue = (state) => state.lives > 0 && state.answers.length < 10;
 
-  if (time < 0) {
-    throw new Error(`Function doesn't accept negative values`);
-  }
+const convertAnswer = (answer) => {
+  let keyword = `wrong`;
 
-  return {
-    time,
-    tick() {
-      if (this.time < 1) {
-        throw new Error(`Time is up`);
-      }
+  if (answer.value) {
+    keyword = answer.time < 10 ? `fast` : `correct`;
 
-      this.time -= 1;
-      return this;
+    if (keyword === `correct`) {
+      keyword = answer.time > 20 ? `slow` : `correct`;
     }
-  };
+  }
+
+  return keyword;
 };
 
-export {INITIAL_DATA, INITIAL_STATE, setTimer};
+const countPoints = (answers) => {
+  const result = {
+    answers: {
+      correct: 0,
+      fast: 0,
+      slow: 0
+    },
+    lives: 3,
+    points: `fail`
+  };
+
+  if (answers.length === 10) {
+    result.points = 0;
+
+    answers.forEach((it) => {
+      if (it.value) {
+        result.answers.correct += 1;
+        result.points += 100;
+
+        if (it.time < 10) {
+          result.answers.fast += 1;
+          result.points += 50;
+        } else if (it.time > 20) {
+          result.answers.slow += 1;
+          result.points -= 50;
+        }
+      } else {
+        result.lives -= 1;
+      }
+    });
+
+    result.points += result.lives * 50;
+  }
+
+  return result;
+};
+
+const die = (state) => {
+  const newState = Object.assign({}, state);
+
+  newState.lives -= 1;
+
+  return newState;
+};
+
+const getRightAnswer = (level) => {
+  let rightAnswer;
+
+  switch (level.type) {
+    case `tinder-like`:
+      rightAnswer = level.answers[0].type;
+      break;
+    case `two-of-two`:
+      rightAnswer = [];
+
+      level.answers.forEach((it) => {
+        rightAnswer.push(it.type);
+      });
+
+      break;
+    case `one-of-three`:
+      let paintings = 0;
+      let photos = 0;
+
+      level.answers.forEach((it) => {
+        if (it.type === `painting`) {
+          paintings++;
+        } else {
+          photos++;
+        }
+      });
+
+      rightAnswer = paintings < photos ? `painting` : `photo`;
+  }
+
+  return rightAnswer;
+};
+
+const saveAnswer = (state, answer) => {
+  const newState = Object.assign({}, state);
+
+  newState.answers.push(answer);
+
+  return newState;
+};
+
+const tick = (state) => {
+  const newState = Object.assign({}, state);
+
+  newState.time += 1;
+
+  return newState;
+};
+
+const updateLevel = (state) => {
+  const newState = Object.assign({}, state);
+
+  newState.level += 1;
+
+  return newState;
+};
+
+export {
+  INITIAL_DATA,
+  INITIAL_STATE,
+  TIME_FOR_TASK,
+  assignAdditionalClass,
+  canContinue,
+  convertAnswer,
+  countPoints,
+  die,
+  getRightAnswer,
+  saveAnswer,
+  tick,
+  updateLevel
+};
