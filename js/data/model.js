@@ -44,7 +44,7 @@ export default class GameModel {
 
   start() {
     this._state = Object.assign({}, INITIAL_STATE);
-    this._state.answers = [];
+    this._state.answers = INITIAL_STATE.answers.slice();
   }
 
   tick() {

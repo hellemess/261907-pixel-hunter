@@ -1,234 +1,3 @@
-const INITIAL_DATA = [
-  {
-    type: `one-of-three`,
-    question: `Найдите рисунок среди изображений`,
-    answers: [
-      {
-        image: {
-          url: `http://i.imgur.com/UIHVp0P.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `http://imgur.com/18zh0az.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `https://k37.kn3.net/0F4598844.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `painting`
-      }
-    ]
-  },
-  {
-    type: `two-of-two`,
-    question: `Угадайте для каждого изображения фото или рисунок?`,
-    answers: [
-      {
-        image: {
-          url: `https://i.imgur.com/KNfvQ44.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `https://k37.kn3.net/47F2604E3.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `painting`
-      }
-    ]
-  },
-  {
-    type: `two-of-two`,
-    question: `Угадайте для каждого изображения фото или рисунок?`,
-    answers: [
-      {
-        image: {
-          url: `https://i.redd.it/l08jq66vul2y.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `http://i.imgur.com/GbcYNPw.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `photo`
-      }
-    ]
-  },
-  {
-    type: `one-of-three`,
-    question: `Найдите рисунок среди изображений`,
-    answers: [
-      {
-        image: {
-          url: `http://i.imgur.com/q7rBB8Y.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `http://i.imgur.com/eSlWjE7.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `https://k31.kn3.net/4BF6BBF0E.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `painting`
-      }
-    ]
-  },
-  {
-    type: `two-of-two`,
-    question: `Угадайте для каждого изображения фото или рисунок?`,
-    answers: [
-      {
-        image: {
-          url: `https://k39.kn3.net/E07A38605.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `painting`
-      },
-      {
-        image: {
-          url: `https://k41.kn3.net/CF684A85A.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `painting`
-      }
-    ]
-  },
-  {
-    type: `two-of-two`,
-    question: `Угадайте для каждого изображения фото или рисунок?`,
-    answers: [
-      {
-        image: {
-          url: `http://i.imgur.com/Gvq3jc2.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `http://i.imgur.com/W5DNOVJ.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `photo`
-      }
-    ]
-  },
-  {
-    type: `tinder-like`,
-    question: `Угадай, фото или рисунок?`,
-    answers: [
-      {
-        image: {
-          url: `https://k34.kn3.net/4244FE50B.jpg`,
-          width: 705,
-          height: 455
-        },
-        type: `painting`
-      }
-    ]
-  },
-  {
-    type: `one-of-three`,
-    question: `Найдите фото среди изображений`,
-    answers: [
-      {
-        image: {
-          url: `https://k42.kn3.net/D660F0768.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `painting`
-      },
-      {
-        image: {
-          url: `https://k32.kn3.net/5C7060EC5.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `painting`
-      },
-      {
-        image: {
-          url: `http://i.imgur.com/Jvzh3pk.jpg`,
-          width: 304,
-          height: 455
-        },
-        type: `photo`
-      }
-    ]
-  },
-  {
-    type: `tinder-like`,
-    question: `Угадай, фото или рисунок?`,
-    answers: [
-      {
-        image: {
-          url: `https://i.redd.it/cfw21jscl03y.jpg`,
-          width: 705,
-          height: 455
-        },
-        type: `photo`
-      }
-    ]
-  },
-  {
-    type: `two-of-two`,
-    question: `Угадайте для каждого изображения фото или рисунок?`,
-    answers: [
-      {
-        image: {
-          url: `http://i.imgur.com/167pXyY.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `photo`
-      },
-      {
-        image: {
-          url: `https://k36.kn3.net/1619797DF.jpg`,
-          width: 468,
-          height: 458
-        },
-        type: `painting`
-      }
-    ]
-  }
-];
-
 const INITIAL_STATE = Object.freeze({
   answers: Object.freeze([]),
   level: 0,
@@ -236,18 +5,18 @@ const INITIAL_STATE = Object.freeze({
   time: 0
 });
 
-const TIME_FOR_TASK = 30;
-
-const assignAdditionalClass = (level) => {
-  switch (level.type) {
-    case `tinder-like`:
-      level.class = `game__content--wide`;
-      break;
-    case `one-of-three`:
-      level.class = `game__content--triple`;
-      break;
-  }
+const QuestionType = {
+  TWO_OF_TWO: `two-of-two`,
+  TINDER_LIKE: `tinder-like`,
+  ONE_OF_THREE: `one-of-three`
 };
+
+const AnswerType = {
+  PAINTING: `painting`,
+  PHOTO: `photo`
+};
+
+const TIME_FOR_TASK = 30;
 
 const canContinue = (state) => state.lives > 0 && state.answers.length < 10;
 
@@ -314,10 +83,10 @@ const getRightAnswer = (level) => {
   let rightAnswer;
 
   switch (level.type) {
-    case `tinder-like`:
+    case QuestionType.TINDER_LIKE:
       rightAnswer = level.answers[0].type;
       break;
-    case `two-of-two`:
+    case QuestionType.TWO_OF_TWO:
       rightAnswer = [];
 
       level.answers.forEach((it) => {
@@ -325,7 +94,7 @@ const getRightAnswer = (level) => {
       });
 
       break;
-    case `one-of-three`:
+    case QuestionType.ONE_OF_THREE:
       let paintings = 0;
       let photos = 0;
 
@@ -337,7 +106,7 @@ const getRightAnswer = (level) => {
         }
       });
 
-      rightAnswer = paintings < photos ? `painting` : `photo`;
+      rightAnswer = paintings < photos ? AnswerType.PAINTING : AnswerType.PHOTO;
   }
 
   return rightAnswer;
@@ -368,10 +137,10 @@ const updateLevel = (state) => {
 };
 
 export {
-  INITIAL_DATA,
   INITIAL_STATE,
   TIME_FOR_TASK,
-  assignAdditionalClass,
+  AnswerType,
+  QuestionType,
   canContinue,
   convertAnswer,
   countPoints,

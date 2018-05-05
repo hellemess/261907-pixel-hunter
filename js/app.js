@@ -1,8 +1,8 @@
 import IntroScreen from './start/intro-screen';
+import Loader from './loader';
 import GreetingScreen from './start/greeting-screen';
 import RulesScreen from './start/rules-screen';
 import GameModel from './data/model';
-import {INITIAL_DATA} from './data/data';
 import GameScreen from './game/game-screen';
 import ResultScreen from './result/result-screen';
 
@@ -13,14 +13,21 @@ const showScreen = (screen) => {
   container.appendChild(screen.element);
 };
 
+let gameData;
+
 export default class Application {
-  static showIntro() {
+  static init() {
     const intro = new IntroScreen();
 
     showScreen(intro);
+
+    Loader.loadData()
+        .then(Application.showGreeting);
   }
 
-  static showGreeting() {
+  static showGreeting(data) {
+    gameData = data;
+
     const greeting = new GreetingScreen();
 
     showScreen(greeting);
@@ -33,7 +40,7 @@ export default class Application {
   }
 
   static showGame(username) {
-    const model = new GameModel(INITIAL_DATA, username);
+    const model = new GameModel(gameData, username);
     const game = new GameScreen(model);
 
     showScreen(game);
