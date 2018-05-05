@@ -1,18 +1,21 @@
-import {assignAdditionalClass} from '../data/data';
+import {
+  QuestionType,
+  AnswerType
+} from '../data/data';
+
 import AbstractView from '../view';
 import FooterView from '../elements/footer-view';
 
 const renderContent = (content) => `
   ${content.answers.map((it, i) => `
     <div class="game__option">
-      <img src="${it.image.url}" alt="Option ${i + 1}" width="${it.image.width}" height="${it.image.height}">
       ${!(content.type === `one-of-three`) ? `
       <label class="game__answer  game__answer--photo">
-        <input name="question${i + 1}" type="radio" value="photo">
+        <input name="question${i + 1}" type="radio" value="${AnswerType.PHOTO}">
         <span>Фото</span>
       </label>
       <label class="game__answer  game__answer--paint">
-        <input name="question${i + 1}" type="radio" value="paint">
+        <input name="question${i + 1}" type="radio" value="${AnswerType.PAINTING}">
         <span>Рисунок</span>
       </label>` : ``}
     </div>`).join(``)}`;
@@ -21,8 +24,6 @@ export default class GameView extends AbstractView {
   constructor(level) {
     super();
     this.level = level;
-
-    assignAdditionalClass(this.level);
   }
 
   get template() {
@@ -43,17 +44,17 @@ export default class GameView extends AbstractView {
     let answer;
 
     switch (this.level.type) {
-      case `tinder-like`:
+      case QuestionType.TINDER_LIKE:
         content.addEventListener(`input`, (evt) => {
           evt.preventDefault();
 
-          answer = evt.target.value === `paint` ? `painting` : `photo`;
+          answer = evt.target.value;
 
           this.onAnswer(answer);
         });
 
         break;
-      case `two-of-two`:
+      case QuestionType.TWO_OF_TWO:
         answer = Array(2);
 
         let answersCounter = 0;
@@ -63,7 +64,7 @@ export default class GameView extends AbstractView {
 
           const questionIndex = evt.target.name.slice(-1);
 
-          answer[questionIndex - 1] = evt.target.value === `paint` ? `painting` : `photo`;
+          answer[questionIndex - 1] = evt.target.value;
 
           if (answersCounter === 0) {
             const questionInputs = content.querySelectorAll(`input[name="question${questionIndex}"]`);
@@ -79,7 +80,7 @@ export default class GameView extends AbstractView {
         });
 
         break;
-      case `one-of-three`:
+      case QuestionType.ONE_OF_THREE:
         content.addEventListener(`click`, (evt) => {
           if (evt.target.classList.contains(`game__option`)) {
             const optionIndex = evt.target.children[0].alt.slice(-1);

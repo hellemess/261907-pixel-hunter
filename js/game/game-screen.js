@@ -1,4 +1,8 @@
-import {getRightAnswer} from '../data/data';
+import {
+  QuestionType,
+  getRightAnswer
+} from '../data/data';
+
 import Application from '../app';
 import GameView from './game-view';
 import BackView from '../elements/back-view';
@@ -32,11 +36,11 @@ export default class GameScreen {
     let result;
 
     switch (this.model.level.type) {
-      case `tinder-like`:
-      case `one-of-three`:
+      case QuestionType.TINDER_LIKE:
+      case QuestionType.ONE_OF_THREE:
         result = answer === rightAnswer;
         break;
-      case `two-of-two`:
+      case QuestionType.TWO_OF_TWO:
         result = JSON.stringify(answer) === JSON.stringify(rightAnswer);
     }
 
@@ -59,6 +63,8 @@ export default class GameScreen {
   }
 
   goBack() {
+    clearInterval(this._interval);
+    clearTimeout(this._timeout);
     Application.showGreeting();
   }
 
@@ -93,13 +99,19 @@ export default class GameScreen {
 
     this.inner = {
       header: this.view.element.querySelector(`header`),
-      game: this.view.element.querySelector(`.game`)
+      game: this.view.element.querySelector(`.game`),
+      options: this.view.element.querySelectorAll(`.game__option`)
     };
 
     this.container.appendChild(this.view.element);
     this.inner.header.appendChild(this.back.element);
     this.inner.header.appendChild(this.timer.element);
     this.inner.header.appendChild(this.header.element);
+
+    this.inner.options.forEach((it, i) => {
+      it.insertBefore(this.view.level.answers[i].image.element, it.firstChild);
+    });
+
     this.inner.game.appendChild(this.stats.element);
   }
 

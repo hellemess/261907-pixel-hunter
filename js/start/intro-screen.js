@@ -1,6 +1,5 @@
 import AbstractView from '../view';
 import FooterView from '../elements/footer-view';
-import Application from '../app';
 
 export default class IntroScreen extends AbstractView {
   constructor() {
@@ -19,14 +18,5 @@ export default class IntroScreen extends AbstractView {
         </div>
       </div>
       ${new FooterView().template}`;
-  }
-
-  bind() {
-    const asteriks = this.element.querySelector(`.intro__asterisk`);
-
-    asteriks.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      Application.showGreeting();
-    });
   }
 }
