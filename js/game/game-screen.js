@@ -3,7 +3,9 @@ import {
   getRightAnswer
 } from '../data/data';
 
+import Loader from '../loader';
 import Application from '../app';
+import DialogView from '../elements/dialog-view';
 import GameView from './game-view';
 import BackView from '../elements/back-view';
 import TimerView from '../elements/timer-view';
@@ -30,6 +32,7 @@ export default class GameScreen {
   answer(answer) {
     clearInterval(this._interval);
     clearTimeout(this._timeout);
+    clearTimeout(this._blink);
 
     const rightAnswer = getRightAnswer(this.model.level);
 
@@ -58,14 +61,38 @@ export default class GameScreen {
       this.model.updateLevel();
       this.updateLevel();
     } else {
-      Application.showResult(this.model.state);
+      const username = this.model.username;
+
+      Loader.postStats(this.model.state, username)
+          .then(() => {
+            Loader.getStats(username)
+                .then(Application.showResult)
+                .catch((error) => {
+                  Application.showError(error);
+                });
+          })
+          .catch((error) => {
+            Application.showError(error);
+          });
     }
   }
 
   goBack() {
-    clearInterval(this._interval);
-    clearTimeout(this._timeout);
-    Application.showGreeting();
+    this.dialog = new DialogView();
+
+    this.dialog.onGoBack = () => {
+      clearInterval(this._interval);
+      clearTimeout(this._timeout);
+      clearTimeout(this._blink);
+      this.model.start();
+      Application.showGreeting(this.model.data);
+    };
+
+    this.dialog.onCancel = () => {
+      this.inner.game.removeChild(document.querySelector(`.dialog`));
+    };
+
+    this.inner.game.appendChild(this.dialog.element);
   }
 
   launchTimer() {
@@ -78,6 +105,7 @@ export default class GameScreen {
 
     this._timeout = setTimeout(() => {
       clearInterval(this._interval);
+      clearTimeout(this._blink);
       this.model.saveAnswer(false);
       this.model.die();
       this.continue();
@@ -91,7 +119,7 @@ export default class GameScreen {
     this.back = new BackView();
     this.timer = new TimerView(this.model.state);
     this.header = new HeaderView(this.model.state);
-    this.stats = new StatsView(this.model.state);
+    this.stats = new StatsView(this.model.state.answers);
     this.container.innerHTML = ``;
 
     this.back.onClick = this.goBack.bind(this);
@@ -118,7 +146,15 @@ export default class GameScreen {
   updateTimer() {
     const newTimer = new TimerView(this.model.state);
 
-    this.inner.header.replaceChild(newTimer.element, document.querySelector(`.game__timer`));
+    if (this.model.state.time < 25) {
+      this.inner.header.replaceChild(newTimer.element, document.querySelector(`.game__timer`));
+    } else {
+      this.inner.header.removeChild(document.querySelector(`.game__timer`));
+
+      this._blink = setTimeout(() => {
+        this.inner.header.insertBefore(newTimer.element, document.querySelector(`.game__lives`));
+      }, 100);
+    }
 
     this.timer = newTimer;
   }

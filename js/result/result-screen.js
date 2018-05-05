@@ -18,6 +18,6 @@ export default class ResultScreen {
   }
 
   goBack() {
-    Application.showGreeting();
+    Application.init();
   }
 }

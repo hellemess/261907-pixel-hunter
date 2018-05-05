@@ -6,16 +6,18 @@ const renderStats = (answers) => `
   ${Array(10 - answers.length).fill(`<li class="stats__result stats__result--unknown"></li>`).join(``)}`;
 
 export default class StatsView extends AbstractView {
-  constructor(state) {
+  constructor(answers) {
     super();
-    this.state = state;
+    this.answers = answers;
   }
 
   get template() {
+    // console.log(this.answers);
+
     return `
       <div class="stats">
         <ul class="stats">
-          ${renderStats(this.state.answers)}
+          ${renderStats(this.answers)}
         </ul>
       </div>`;
   }

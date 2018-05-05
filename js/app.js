@@ -5,6 +5,7 @@ import RulesScreen from './start/rules-screen';
 import GameModel from './data/model';
 import GameScreen from './game/game-screen';
 import ResultScreen from './result/result-screen';
+import ErrorScreen from './error/error-screen';
 
 const container = document.querySelector(`main`);
 
@@ -21,8 +22,11 @@ export default class Application {
 
     showScreen(intro);
 
-    Loader.loadData()
-        .then(Application.showGreeting);
+    Loader.getData()
+        .then(Application.showGreeting)
+        .catch((error) => {
+          Application.showError(error);
+        });
   }
 
   static showGreeting(data) {
@@ -51,5 +55,11 @@ export default class Application {
     const result = new ResultScreen(state);
 
     showScreen(result);
+  }
+
+  static showError(status) {
+    const error = new ErrorScreen(status);
+
+    showScreen(error);
   }
 }

@@ -42,16 +42,20 @@ export default class GameView extends AbstractView {
     const content = this.element.querySelector(`.game__content`);
 
     let answer;
+    let answerHandler;
 
     switch (this.level.type) {
       case QuestionType.TINDER_LIKE:
-        content.addEventListener(`input`, (evt) => {
+        answerHandler = (evt) => {
           evt.preventDefault();
 
           answer = evt.target.value;
 
           this.onAnswer(answer);
-        });
+          content.removeEventListener(`input`, answerHandler);
+        };
+
+        content.addEventListener(`input`, answerHandler);
 
         break;
       case QuestionType.TWO_OF_TWO:
@@ -59,36 +63,41 @@ export default class GameView extends AbstractView {
 
         let answersCounter = 0;
 
-        content.addEventListener(`input`, (evt) => {
+        answerHandler = (evt) => {
           evt.preventDefault();
 
           const questionIndex = evt.target.name.slice(-1);
+          const questionInputs = content.querySelectorAll(`input[name="question${questionIndex}"]`);
 
           answer[questionIndex - 1] = evt.target.value;
 
+          questionInputs.forEach((it) => {
+            it.disabled = true;
+          });
+
           if (answersCounter === 0) {
-            const questionInputs = content.querySelectorAll(`input[name="question${questionIndex}"]`);
-
-            questionInputs.forEach((it) => {
-              it.disabled = true;
-            });
-
             answersCounter++;
           } else {
             this.onAnswer(answer);
+            content.removeEventListener(`input`, answerHandler);
           }
-        });
+        };
+
+        content.addEventListener(`input`, answerHandler);
 
         break;
       case QuestionType.ONE_OF_THREE:
-        content.addEventListener(`click`, (evt) => {
+        answerHandler = (evt) => {
           if (evt.target.classList.contains(`game__option`)) {
             const optionIndex = evt.target.children[0].alt.slice(-1);
             answer = this.level.answers[optionIndex - 1].type;
 
             this.onAnswer(answer);
+            content.removeEventListener(`input`, answerHandler);
           }
-        });
+        };
+
+        content.addEventListener(`click`, answerHandler);
     }
   }
 

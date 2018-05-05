@@ -1,0 +1,53 @@
+.dialog {
+  position: absolute;
+  top: 200px;
+  left: 50%;
+
+  padding: 30px;
+
+  transform: translateX(-50%);
+
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 0 100px 0 #888;
+}
+
+.dialog__btn {
+  margin-top: 10px;
+  margin-right: 20px;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  padding-top: 10px;
+  padding-right: 35px;
+  padding-bottom: 10px;
+  padding-left: 35px;
+
+  font: inherit;
+
+  color: white;
+  background: #888;
+  border: 3px solid #888;
+  border-radius: 30px;
+
+  &:hover {
+    color: #888;
+    background: white;
+  }
+
+  &--ok {
+    background: darkred;
+    border-color: darkred;
+  }
+
+  &--ok:hover {
+    color: darkred;
+  }
+}
+
+.dialog__error {
+  font-size: 2em;
+
+  color: darkred;
+}
