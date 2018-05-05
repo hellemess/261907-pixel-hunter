@@ -18,7 +18,7 @@ const AnswerType = {
 
 const TIME_FOR_TASK = 30;
 
-const canContinue = (state) => state.lives > 0 && state.answers.length < 10;
+const canContinue = (state) => state.lives >= 0 && state.answers.length < 10;
 
 const convertAnswer = (answer) => {
   let keyword = `wrong`;
