@@ -66,7 +66,13 @@ export default class GameScreen {
       Loader.postStats(this.model.state, username)
           .then(() => {
             Loader.getStats(username)
-                .then(Application.showResult);
+                .then(Application.showResult)
+                .catch((error) => {
+                  Application.showError(error);
+                });
+          })
+          .catch((error) => {
+            Application.showError(error);
           });
     }
   }

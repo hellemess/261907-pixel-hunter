@@ -2,7 +2,7 @@ import adaptData from './data/adapter';
 
 const APP_ID = 4815162342;
 const DEFAULT_NAME = `shuri`;
-const URL = `https://es.dump.academy/pixel-hunter1`;
+const URL = `https://es.dump.academy/pixel-hunter`;
 
 const checkStatus = (response) => {
   if (response.ok) {
