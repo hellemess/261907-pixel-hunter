@@ -14,6 +14,21 @@ const showScreen = (screen) => {
   container.appendChild(screen.element);
 };
 
+const fade = () => {
+  Array.from(container.children).forEach((it) => {
+    it.setAttribute(`style`, `opacity: 1;`);
+
+    const fadeOut = setInterval(() => {
+      if (it.style.opacity > 0) {
+        it.style.opacity -= 0.1;
+      } else {
+        clearInterval(fadeOut);
+        container.removeChild(it);
+      }
+    }, 100);
+  });
+};
+
 let gameData;
 
 export default class Application {
@@ -30,11 +45,14 @@ export default class Application {
   }
 
   static showGreeting(data) {
-    gameData = data;
+    if (data) {
+      gameData = data;
+    }
 
     const greeting = new GreetingScreen();
 
-    showScreen(greeting);
+    fade();
+    container.appendChild(greeting.element);
   }
 
   static showRules() {

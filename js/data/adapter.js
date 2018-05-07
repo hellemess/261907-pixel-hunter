@@ -37,6 +37,8 @@ const createImageElement = (imageData, i) => {
 
   imageElement.src = imageData.url;
   imageElement.alt = `Option ${i + 1}`;
+  imageElement.style.position = `relative`;
+  imageElement.style.zIndex = -1;
 
   imageElement.addEventListener(`load`, () => {
     const image = {

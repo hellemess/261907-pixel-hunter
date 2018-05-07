@@ -80,16 +80,21 @@ export default class GameScreen {
   goBack() {
     this.dialog = new DialogView();
 
+    const removeDialog = () => {
+      this.inner.game.removeChild(document.querySelector(`.dialog`));
+    };
+
     this.dialog.onGoBack = () => {
       clearInterval(this._interval);
       clearTimeout(this._timeout);
       clearTimeout(this._blink);
       this.model.start();
+      removeDialog();
       Application.showGreeting(this.model.data);
     };
 
     this.dialog.onCancel = () => {
-      this.inner.game.removeChild(document.querySelector(`.dialog`));
+      removeDialog();
     };
 
     this.inner.game.appendChild(this.dialog.element);

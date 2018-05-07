@@ -12,13 +12,15 @@ const renderContent = (content) => `
       ${!(content.type === `one-of-three`) ? `
       <label class="game__answer  game__answer--photo">
         <input name="question${i + 1}" type="radio" value="${AnswerType.PHOTO}">
-        <span>Фото</span>
+        <span style="position: relative; z-index: -1;">Фото</span>
       </label>
       <label class="game__answer  game__answer--paint">
         <input name="question${i + 1}" type="radio" value="${AnswerType.PAINTING}">
-        <span>Рисунок</span>
+        <span style="position: relative; z-index: -1;">Рисунок</span>
       </label>` : ``}
     </div>`).join(``)}`;
+
+const isAnswerGiven = (evt) => typeof evt.target.children[0].value === `string`;
 
 export default class GameView extends AbstractView {
   constructor(level) {
@@ -41,64 +43,81 @@ export default class GameView extends AbstractView {
   bind() {
     const content = this.element.querySelector(`.game__content`);
 
-    let answer;
-    let answerHandler;
-
     switch (this.level.type) {
       case QuestionType.TINDER_LIKE:
-        answerHandler = (evt) => {
-          evt.preventDefault();
-
-          answer = evt.target.value;
-
-          this.onAnswer(answer);
-          content.removeEventListener(`input`, answerHandler);
-        };
-
-        content.addEventListener(`input`, answerHandler);
-
+        this.handleTinderLike(content);
         break;
       case QuestionType.TWO_OF_TWO:
-        answer = Array(2);
-
-        let answersCounter = 0;
-
-        answerHandler = (evt) => {
-          evt.preventDefault();
-
-          const questionIndex = evt.target.name.slice(-1);
-          const questionInputs = content.querySelectorAll(`input[name="question${questionIndex}"]`);
-
-          answer[questionIndex - 1] = evt.target.value;
-
-          questionInputs.forEach((it) => {
-            it.disabled = true;
-          });
-
-          if (answersCounter === 0) {
-            answersCounter++;
-          } else {
-            this.onAnswer(answer);
-            content.removeEventListener(`input`, answerHandler);
-          }
-        };
-
-        content.addEventListener(`input`, answerHandler);
-
+        this.handleTwoOfTwo(content);
         break;
       case QuestionType.ONE_OF_THREE:
-        answerHandler = (evt) => {
-          if (evt.target.classList.contains(`game__option`)) {
-            const optionIndex = evt.target.children[0].alt.slice(-1);
-            answer = this.level.answers[optionIndex - 1].type;
-
-            this.onAnswer(answer);
-            content.removeEventListener(`input`, answerHandler);
-          }
-        };
-
-        content.addEventListener(`click`, answerHandler);
+        this.handleOneOfThree(content);
     }
+  }
+
+  handleOneOfThree(element) {
+    const answerHandler = (evt) => {
+      if (evt.target.classList.contains(`game__option`)) {
+        const optionIndex = evt.target.children[0].alt.slice(-1);
+        const answer = this.level.answers[optionIndex - 1].type;
+
+        this.onAnswer(answer);
+        element.removeEventListener(`click`, answerHandler);
+      }
+    };
+
+    element.addEventListener(`click`, answerHandler);
+  }
+
+  handleTinderLike(element) {
+    const answerHandler = (evt) => {
+      evt.preventDefault();
+
+      if (isAnswerGiven(evt)) {
+        const input = evt.target.children[0];
+        const answer = input.value;
+
+        this.onAnswer(answer);
+        element.removeEventListener(`click`, answerHandler);
+      }
+    };
+
+    element.addEventListener(`click`, answerHandler);
+  }
+
+  handleTwoOfTwo(element) {
+    const answer = Array(2);
+
+    let answersCounter = 0;
+
+    const answerHandler = (evt) => {
+      evt.preventDefault();
+
+      if (isAnswerGiven(evt)) {
+        const input = evt.target.children[0];
+        const questionIndex = input.name.slice(-1);
+
+        answer[questionIndex - 1] = input.value;
+
+        input.checked = true;
+
+        const questionInputs = element.querySelectorAll(`input[name="question${questionIndex}"]`);
+
+        questionInputs.forEach((it) => {
+          it.parentElement.style.position = `absolute`;
+          it.parentElement.style.zIndex = -1;
+        });
+
+        if (answersCounter === 0) {
+          answersCounter++;
+        } else {
+          this.onAnswer(answer);
+          element.removeEventListener(`click`, answerHandler);
+        }
+      }
+    };
+
+    element.addEventListener(`click`, answerHandler);
   }
 
   onAnswer() {}

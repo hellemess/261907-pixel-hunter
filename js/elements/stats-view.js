@@ -12,8 +12,6 @@ export default class StatsView extends AbstractView {
   }
 
   get template() {
-    // console.log(this.answers);
-
     return `
       <div class="stats">
         <ul class="stats">
